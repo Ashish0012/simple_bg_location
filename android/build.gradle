@@ -2,15 +2,16 @@ group 'com.royzed.simple_bg_location'
 version '1.0-SNAPSHOT'
 
 buildscript {
-    ext.kotlin_version = '1.7.10'
+    ext.kotlin_version = '2.1.0' // Updated Kotlin version
     ext.room_version = '2.5.0'
+
     repositories {
         google()
         mavenCentral()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.2.0'
+        classpath 'com.android.tools.build:gradle:8.2.0' // Upgraded AGP version
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -22,11 +23,16 @@ rootProject.allprojects {
     }
 }
 
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
+// Migrate to the new plugin system
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+}
 
 android {
-    compileSdkVersion 33
+    namespace "com.royzed.simple_bg_location" // 🔥 Required fix for AGP 8.0+
+
+    compileSdk 34 // Updated to latest SDK
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -43,28 +49,25 @@ android {
 
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 33
+        targetSdkVersion 34 // Updated to match `compileSdk`
     }
 }
 
 dependencies {
-    def activity_version = "1.6.1"
-    def fragment_version = "1.5.5"
-    implementation "androidx.core:core-ktx:1.9.0"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    def activity_version = "1.8.0" // Updated version
+    def fragment_version = "1.6.2" // Updated version
+
+    implementation "androidx.core:core-ktx:1.12.0"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version" // Updated
+
     implementation "androidx.activity:activity-ktx:$activity_version"
-    // androidx.fragment and android.activity must implementation together
-    // otherwise in androidx.activity.result.ActivityResultCallback will throw exception
-    // said can only use 16 bits for requestCode
-    // https://stackoverflow.com/questions/25529865/java-lang-illegalargumentexception-can-only-use-lower-16-bits-for-requestcode
     implementation "androidx.fragment:fragment-ktx:$fragment_version"
 
     implementation 'com.google.android.gms:play-services-location:21.0.1'
     implementation "androidx.cardview:cardview:1.0.0"
-    implementation 'com.google.android.material:material:1.9.0-alpha02'
+    implementation 'com.google.android.material:material:1.10.0' // Updated
 
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
     testImplementation "androidx.room:room-testing:$room_version"
-
 }
